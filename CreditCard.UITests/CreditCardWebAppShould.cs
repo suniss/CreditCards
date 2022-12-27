@@ -14,9 +14,9 @@ namespace CreditCard.UITests
         [Trait("Category", "Smoke")]
         public void LoadApplicatuibPage()
         {
-            using (IWebDriver driver = new ChromeDriver()) 
+            using (IWebDriver driver = new ChromeDriver())
             {
-              
+
                 driver.Navigate().GoToUrl(HomeUrl);
 
                 TestHelper.Pause();
@@ -30,9 +30,9 @@ namespace CreditCard.UITests
         [Trait("Category", "Smoke")]
         public void ReloadHomePage()
         {
-            using (IWebDriver driver = new ChromeDriver()) 
+            using (IWebDriver driver = new ChromeDriver())
             {
-               
+
                 driver.Navigate().GoToUrl(HomeUrl);
                 TestHelper.Pause();
                 driver.Navigate().Refresh();
@@ -43,27 +43,31 @@ namespace CreditCard.UITests
         }
 
         [Fact]
-        [Trait("Category","Smoke")]
-        public void GetHomePage() 
-        { 
-            using(IWebDriver driver = new ChromeDriver())
+        [Trait("Category", "Smoke")]
+        public void ReloadHomePageBack()
+        {
+            using (IWebDriver driver = new ChromeDriver())
             {
                 driver.Navigate().GoToUrl(HomeUrl);
+                IWebElement generationTokenElement =
+                    driver.FindElement(By.Id("GenerationToken"));
+                string initialToken = generationTokenElement.Text;
                 TestHelper.Pause();
                 driver.Navigate().GoToUrl(AboutUrl);
                 TestHelper.Pause();
                 driver.Navigate().Back();
                 TestHelper.Pause();
 
-                Assert.Equal(HomeTitle, driver.Title);  
+                Assert.Equal(HomeTitle, driver.Title);
                 Assert.Equal(HomeUrl, driver.Url);
 
-                // TODO: assert that page was reloaded
+                string roloadedToken = driver.FindElement(By.Id("GenerationToken")).Text;
+                Assert.NotEqual(initialToken, roloadedToken);
             }
         }
         [Fact]
         [Trait("Category", "Smoke")]
-        public void ReloadHomePageOnForward() 
+        public void ReloadHomePageOnForward()
         {
             using (IWebDriver driver = new ChromeDriver())
             {
@@ -74,7 +78,7 @@ namespace CreditCard.UITests
                 TestHelper.Pause();
 
                 driver.Navigate().Forward();
-                TestHelper.Pause(); 
+                TestHelper.Pause();
 
                 Assert.Equal(HomeTitle, driver.Title);
                 Assert.Equal(HomeUrl, driver.Url);
@@ -82,6 +86,7 @@ namespace CreditCard.UITests
                 //TODO: assert that page was reloaded
             }
         }
-            
+
     }
 }
+
